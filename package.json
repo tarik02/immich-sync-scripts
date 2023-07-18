@@ -3,6 +3,7 @@
   "packageManager": "yarn@3.5.1",
   "type": "module",
   "dependencies": {
+    "@types/node": "^20.4.2",
     "json5": "^2.2.3",
     "zod": "^3.21.4"
   }

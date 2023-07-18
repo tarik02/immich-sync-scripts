@@ -54,12 +54,24 @@ for (const [deviceId, assetsByDevice] of Object.entries(groupedByDeviceId)) {
             continue;
         }
 
+        const fileResponse = await fetch(
+            `${ remoteUrl }/api/asset/download/${ encodeURIComponent(asset.id) }?key=${ encodeURIComponent(shareKey) }`,
+            {
+                method: 'POST'
+            }
+        );
+
+        if (fileResponse.status !== 200) {
+            console.warn(`Failed to download asset "${ asset.id }"`);
+            continue;
+        }
+
         const formData = new FormData();
 
         formData.append('assetType', asset.type);
         formData.append(
             'assetData',
-            await fetch(`${ remoteUrl }/api/asset/download/${ encodeURIComponent(asset.id) }?key=${ encodeURIComponent(shareKey) }`).then(response => response.blob())
+            new File([await fileResponse.blob()], Path.basename(asset.originalPath))
         );
 
         formData.append('deviceId', asset.deviceId);
